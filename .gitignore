@@ -17,9 +17,8 @@ hs_err_pid*
 *.ipr
 *.iws
 
-# gradle files
+# Gradle files
+build/
+gradle/
 gradlew
-gradle
-build
-build.gradle
 gradlew.bat
