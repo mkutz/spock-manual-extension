@@ -9,7 +9,7 @@ import org.spockframework.runtime.model.SpecInfo
  */
 abstract class TestPlanBuilder {
 
-    private static final CONFIG = new ConfigSlurper().parse(GroovyResourceLoader.getResource("/SpockManualConfig.groovy"))
+    private static final CONFIG = ManualExtension.CONFIG
 
     /**
      * Translations of {@link org.spockframework.runtime.model.BlockKind}s to be used in the test plan.
