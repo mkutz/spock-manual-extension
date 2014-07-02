@@ -1,5 +1,4 @@
 apply plugin: "groovy"
-apply plugin: "idea"
 apply plugin: "jacoco"
 apply plugin: "sonar-runner"
 
@@ -12,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.3.1"
+    compile "org.codehaus.groovy:groovy-all:2.3.3"
     compile "org.spockframework:spock-core:0.7-groovy-2.0"
     testRuntime "cglib:cglib:3.1"
     testRuntime "org.objenesis:objenesis:2.1"
@@ -23,12 +22,6 @@ jacocoTestReport {
         xml.enabled true
         csv.enabled true
         html.destination "${buildDir}/jacoco/html"
-    }
-}
-
-test {
-    jacoco {
-        excludes = ["${projectDir}/src/test/resources/SpockManualConfig.groovy"]
     }
 }
 
@@ -47,6 +40,5 @@ sonarRunner {
         property "sonar.dynamicAnalysis", "true"
         property "sonar.tests", "src/test/groovy"
         property "sonar.sources", "src/main/groovy"
-        property "sonar.exclusions", "src/main/groovy/SpockManualConfig.groovy"
     }
 }
