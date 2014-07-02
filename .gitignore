@@ -1,5 +1,4 @@
 *.class
-.*
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -16,9 +15,11 @@ hs_err_pid*
 *.iml
 *.ipr
 *.iws
+.idea
 
 # Gradle files
 build/
 gradle/
 gradlew
 gradlew.bat
+.gradle
