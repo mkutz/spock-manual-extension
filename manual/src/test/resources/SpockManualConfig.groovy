@@ -1,11 +1,11 @@
 import de.assertagile.spockframework.extensions.CsvTestPlanBuilder
 import de.assertagile.spockframework.extensions.HtmlTestPlanBuilder
 
-locale = Locale.ENGLISH
-jiraUrl = "http://jira.allesklar.org/"
-jiraPid = "14800"
+Locale locale = Locale.ENGLISH
+String jiraUrl = null
+String jiraPid = null
 
 testPlanBuilders = [
-    new HtmlTestPlanBuilder("test_plan.html", jiraUrl, jiraPid),
-    new CsvTestPlanBuilder("test_plan.csv")
+    new HtmlTestPlanBuilder("build/test_plan.html", locale, jiraUrl, jiraPid),
+    new CsvTestPlanBuilder("build/test_plan.csv", locale)
 ]

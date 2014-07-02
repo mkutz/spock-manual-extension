@@ -16,8 +16,8 @@ class HtmlTestPlanBuilder extends TestPlanBuilder {
 
     private MarkupBuilder _htmlWriter
 
-    public HtmlTestPlanBuilder(String filePath, String jiraUrl = null, String jiraPid = null) {
-        super(filePath)
+    public HtmlTestPlanBuilder(String filePath, Locale locale = Locale.ENGLISH, String jiraUrl = null, String jiraPid = null) {
+        super(filePath, locale)
 
         this.jiraEnabled = jiraUrl && jiraPid
         this.jiraUrl = jiraUrl
@@ -25,28 +25,44 @@ class HtmlTestPlanBuilder extends TestPlanBuilder {
     }
 
     @Override
-    TestPlanBuilder appendSpec(Manual annotation, SpecInfo spec) {
+    void appendHeader() {}
+
+    @Override
+    void appendSpec(Manual annotation, SpecInfo spec) {
         htmlWriter.h2 getSpecTitle(annotation, spec)
-        return this
     }
 
     @Override
-    TestPlanBuilder appendFeature(Manual annotation, FeatureInfo feature) {
-        htmlWriter.h3 feature.name
+    void appendFeature(Manual annotation, FeatureInfo feature) {
+        htmlWriter.h3 {
+            if (annotation?.story()) {
+                if (jiraEnabled) {
+                    a(class: "story", href: issueJiraLink(annotation.story()), annotation.story())
+                } else {
+                    span(class: "story", annotation.story())
+                }
+            }
+            span(class: "featureName", feature.name)
+        }
 
         htmlWriter.p {
-            a(href: issueJiraLink(annotation.story()), "Story")
-            h4 "Bugs: "
-            annotation.knownBugs().each { String bugId ->
-                a(href: issueJiraLink(bugId), bugId)
+            if (annotation?.knownBugs()) {
+                h4 "Bugs: "
+                ul(class: "bugList") {
+                    annotation?.knownBugs()?.each { String bugId ->
+                        li(class: "bug") {
+                            jiraEnabled ? a(href: issueJiraLink(bugId), bugId) : span(bugId)
+                        }
+                    }
+                }
             }
         }
 
-        htmlWriter.p {
+        if (jiraEnabled) htmlWriter.p {
             a(href: openBugJiraLink(feature), "create Bug")
         }
 
-        htmlWriter.dl {
+        htmlWriter.dl(class: "testStepList") {
             feature.blocks.each { BlockInfo block ->
                 dt blockKindToString(block.kind)
                 dd {
@@ -58,7 +74,6 @@ class HtmlTestPlanBuilder extends TestPlanBuilder {
                 }
             }
         }
-        return this
     }
 
     private String openBugJiraLink(FeatureInfo feature) {

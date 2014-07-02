@@ -9,8 +9,6 @@ import org.spockframework.runtime.model.SpecInfo
  */
 abstract class TestPlanBuilder {
 
-    private static final CONFIG = new ConfigSlurper().parse(GroovyResourceLoader.getResource("/SpockManualConfig.groovy"))
-
     /**
      * Translations of {@link org.spockframework.runtime.model.BlockKind}s to be used in the test plan.
      */
@@ -25,17 +23,21 @@ abstract class TestPlanBuilder {
 
     private File file
     private Writer writer
+    protected Locale locale
 
-    public TestPlanBuilder(String filePath) {
-        this.file = new File(filePath)
+    public TestPlanBuilder(String filePath, Locale locale) {
+        this.file = new File(filePath).absoluteFile
+        this.locale = locale
     }
 
-    abstract public TestPlanBuilder appendSpec(Manual annotation, SpecInfo spec)
+    abstract public void appendHeader()
 
-    abstract public TestPlanBuilder appendFeature(Manual annotation, FeatureInfo feature)
+    abstract public void appendSpec(Manual annotation, SpecInfo spec)
+
+    abstract public void appendFeature(Manual annotation, FeatureInfo feature)
 
     public static String getSpecTitle(Manual annotation, SpecInfo spec) {
-        annotation.value() ?: camelCaseToString(spec.name)
+        annotation?.value() ?: camelCaseToString(spec.name)
     }
 
     protected Writer getWriter() {
@@ -45,6 +47,10 @@ abstract class TestPlanBuilder {
         return writer
     }
 
+    protected String blockKindToString(BlockKind blockKind) {
+        BLOCK_NAME[blockKind][locale]
+    }
+
     protected void setWriter(Writer writer) {
         this.writer = writer
     }
@@ -52,9 +58,4 @@ abstract class TestPlanBuilder {
     protected static String camelCaseToString(String camelCase) {
         camelCase.replaceAll(/(.)([A-Z])/, /$1 $2/)
     }
-
-    protected static String blockKindToString(BlockKind blockKind) {
-        BLOCK_NAME[blockKind][CONFIG.locale as Locale]
-    }
-
 }
