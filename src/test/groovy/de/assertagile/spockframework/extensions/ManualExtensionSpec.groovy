@@ -1,6 +1,7 @@
 package de.assertagile.spockframework.extensions
 
 import org.spockframework.runtime.model.FeatureInfo
+import org.spockframework.runtime.model.MethodInfo
 import org.spockframework.runtime.model.NodeInfo
 import org.spockframework.runtime.model.SpecInfo
 import spock.lang.Specification
@@ -39,10 +40,15 @@ class ManualExtensionSpec extends Specification {
         given:
         Manual annotationMock = Mock()
         FeatureInfo unannotatedFeatureMock = Mock() {
-            getReflection() >> Mock(AnnotatedElement) { getAnnotations() >> [] }
+            getFeatureMethod() >> Mock(MethodInfo) {
+                getReflection() >> Mock(AnnotatedElement) { getAnnotations() >> [] }
+            }
         }
         FeatureInfo annotatedFeatureInfoMock = Mock() {
-            getReflection() >> Mock(AnnotatedElement) { getAnnotations() >> [Mock(Manual) { annotationType() >> Manual }] }
+            getFeatureMethod() >> Mock(MethodInfo) {
+                getReflection() >> Mock(AnnotatedElement) {
+                    getAnnotations() >> [Mock(Manual) { annotationType() >> Manual }] }
+            }
         }
         SpecInfo specInfoMock = Mock() {
             getFeatures() >> [unannotatedFeatureMock, annotatedFeatureInfoMock]

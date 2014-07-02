@@ -66,7 +66,8 @@ class HtmlTestPlanBuilderSpec extends Specification {
 
         then:
         String result = stringWriter.toString()
-        result.contains("<h3>${featureInfoMock.name}</h3>")
+        result.contains("<span class='story'>SRY-4711</span>")
+        result.contains("<span class='featureName'>I'm a feature's name.</span>")
         blockMocks*.texts*.each { result.contains(it) }
         println result
     }
