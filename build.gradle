@@ -1,6 +1,17 @@
 apply plugin: "groovy"
 apply plugin: "jacoco"
 apply plugin: "sonar-runner"
+apply plugin: 'coveralls'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.3.0'
+    }
+}
 
 group = "de.assertagile.spockframework.extensions"
 version = "0.1-SNAPSHOT"
