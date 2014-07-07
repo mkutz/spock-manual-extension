@@ -14,8 +14,6 @@ class CsvTestPlanBuilder extends TestPlanBuilder {
             (Locale.GERMAN): ["User Story", "Feature", "Spezifikation", "Test", "Bekannte Fehler"]
     ]
 
-    SpecInfo currentSpec = null
-
     CsvTestPlanBuilder(String filePath, Locale locale = Locale.ENGLISH) {
         super(filePath, locale)
     }
@@ -28,31 +26,23 @@ class CsvTestPlanBuilder extends TestPlanBuilder {
     }
 
     @Override
-    void appendSpec(Manual annotation, SpecInfo spec) {
-        currentSpec = spec
+    void appendSpec(SpecInfo spec, String story, String[] knownBugs) {
     }
 
     @Override
-    void appendFeature(Manual annotation, FeatureInfo feature) {
-        writer << "\"${annotation?.story() ?: ""}\";"
+    void appendFeature(FeatureInfo feature, String story, String[] knownBugs) {
+        writer << "\"${story ?: ""}\";"
 
-        if (currentSpec != feature.parent) {
-            appendSpec(null, feature.parent)
-        }
-        writer << "\"${currentSpecTitle}\";\"${feature.getName()}\";"
+        writer << "\"${feature.parent.name}\";\"${feature.name}\";"
 
         List<String> featureTexts = []
         feature.blocks.each { BlockInfo block ->
             featureTexts << "${blockKindToString(block.kind)} ${block.texts.join(" and ")}"
         }
         writer << "\"${featureTexts.join("\n")}.\";"
-        writer << "\"${annotation?.knownBugs()?.join("\n") ?: ""}\";"
+        writer << "\"${knownBugs?.join("\n") ?: ""}\";"
         writer << "\n"
 
         writer.flush()
-    }
-
-    String getCurrentSpecTitle() {
-        return currentSpec.getReflection().getAnnotation(Manual)?.value() ?: currentSpec.getName()
     }
 }

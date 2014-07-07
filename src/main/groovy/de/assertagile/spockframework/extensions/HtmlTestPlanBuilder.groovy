@@ -28,28 +28,29 @@ class HtmlTestPlanBuilder extends TestPlanBuilder {
     void appendHeader() {}
 
     @Override
-    void appendSpec(Manual annotation, SpecInfo spec) {
-        htmlWriter.h2 getSpecTitle(annotation, spec)
+    void appendSpec(SpecInfo spec, String story, String[] knownBugs) {
+        htmlWriter.h2 "${story ? "${story}: " : ""}${spec.name}"
     }
 
     @Override
-    void appendFeature(Manual annotation, FeatureInfo feature) {
+    void appendFeature(FeatureInfo feature, String story, String[] knownBugs) {
         htmlWriter.h3 {
-            if (annotation?.story()) {
+            if (story) {
                 if (jiraEnabled) {
-                    a(class: "story", href: issueJiraLink(annotation.story()), annotation.story())
+                    a(class: "story", href: issueJiraLink(story), story)
                 } else {
-                    span(class: "story", annotation.story())
+                    span(class: "story", story)
                 }
+                ": "
             }
             span(class: "featureName", feature.name)
         }
 
         htmlWriter.p {
-            if (annotation?.knownBugs()) {
+            if (knownBugs) {
                 h4 "Bugs: "
                 ul(class: "bugList") {
-                    annotation?.knownBugs()?.each { String bugId ->
+                    knownBugs.each { String bugId ->
                         li(class: "bug") {
                             jiraEnabled ? a(href: issueJiraLink(bugId), bugId) : span(bugId)
                         }

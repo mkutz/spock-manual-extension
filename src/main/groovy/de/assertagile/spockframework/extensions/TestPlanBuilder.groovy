@@ -3,6 +3,7 @@ package de.assertagile.spockframework.extensions
 import org.spockframework.runtime.model.BlockKind
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
+import spock.lang.Title
 
 /**
  * Created by mkutz on 27.05.14.
@@ -32,13 +33,9 @@ abstract class TestPlanBuilder {
 
     abstract public void appendHeader()
 
-    abstract public void appendSpec(Manual annotation, SpecInfo spec)
+    abstract public void appendSpec(SpecInfo spec, String story, String[] knownBugs)
 
-    abstract public void appendFeature(Manual annotation, FeatureInfo feature)
-
-    public static String getSpecTitle(Manual annotation, SpecInfo spec) {
-        annotation?.value() ?: camelCaseToString(spec.name)
-    }
+    abstract public void appendFeature(FeatureInfo feature, String story, String[] knownBugs)
 
     protected Writer getWriter() {
         if (!writer) {
@@ -53,9 +50,5 @@ abstract class TestPlanBuilder {
 
     protected void setWriter(Writer writer) {
         this.writer = writer
-    }
-
-    protected static String camelCaseToString(String camelCase) {
-        camelCase.replaceAll(/(.)([A-Z])/, /$1 $2/)
     }
 }

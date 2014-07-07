@@ -9,12 +9,7 @@ import spock.lang.Subject
 
 import java.lang.reflect.AnnotatedElement
 
-/**
- * Created by mkutz on 28.05.14.
- */
-class CsvTestPlanBuilderSpec extends Specification {
-
-    Writer stringWriter = new StringWriter()
+class CsvTestPlanBuilderSpec extends TestPlanBuilderSpec {
 
     @Subject
     CsvTestPlanBuilder csvTestPlanBuilder = new CsvTestPlanBuilder("some/file/path")
@@ -25,7 +20,7 @@ class CsvTestPlanBuilderSpec extends Specification {
 
     def "appending a spec should do nothing but add the spec's title to each following feature"() {
         when:
-        csvTestPlanBuilder.appendSpec(Mock(Manual), Mock(SpecInfo))
+        csvTestPlanBuilder.appendSpec(Mock(SpecInfo), "", [] as String[])
 
         then:
         stringWriter.toString() == ""
@@ -47,20 +42,18 @@ class CsvTestPlanBuilderSpec extends Specification {
             getBlocks() >> blockMocks
             getParent() >> specInfoMock
         }
-        Manual annotationMock = Mock() {
-            knownBugs() >> ["BUG-666", "BUG-1"]
-            story() >> "STY-4711"
-        }
+        String story = "STY-4711"
+        String[] knownBugs = []
 
         when:
-        csvTestPlanBuilder.appendFeature(annotationMock, featureInfoMock)
+        csvTestPlanBuilder.appendFeature(featureInfoMock, story, knownBugs)
 
         then:
-        stringWriter.toString() == "\"${annotationMock.story()}\";" +
+        stringWriter.toString() == "\"${story}\";" +
                 "\"${specInfoMock.name}\";" +
                 "\"${featureInfoMock.name}\";" +
                 "\"Given prepare A and prepare B\nWhen do something\nThen something happened with A and B is red.\";" +
-                "\"${annotationMock.knownBugs().join("\n")}\";" +
+                "\"${knownBugs.join("\n")}\";" +
                 "\n"
         println stringWriter.toString()
     }

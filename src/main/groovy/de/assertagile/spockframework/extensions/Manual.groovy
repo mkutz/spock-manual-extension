@@ -8,11 +8,15 @@ import java.lang.annotation.RetentionPolicy
 import java.lang.annotation.Target
 
 /**
- * Indicates the marked specification type or feature method as manual test. In case of a specification type all its
- * feature methods will be marked manual.
+ * <p>
+ * Indicates the marked {@link spock.lang.Specification} type or feature method as manual test.
+ * In case of a {@link spock.lang.Specification} type all its feature methods will be marked manual.
+ * </p>
  *
+ * <p>
  * The extension will automatically exclude the marked features as excluded from the test run (meaning they do not
  * appear in any way in the test statistics) and uses the feature's block texts to create a test plan file.
+ * </p>
  *
  * For instance this feature
  *
@@ -46,13 +50,6 @@ import java.lang.annotation.Target
 @Target([ElementType.TYPE, ElementType.METHOD])
 @ExtensionAnnotation(ManualExtension)
 public @interface Manual {
-    /**
-     * The title of the marked specification type or feature method. The test plan file will use this if given,
-     * otherwise the specification's or feature's name will be used.
-     *
-     * @return the title of the marked specification type or method.
-     */
-    String value() default "";
 
     String story() default "";
 

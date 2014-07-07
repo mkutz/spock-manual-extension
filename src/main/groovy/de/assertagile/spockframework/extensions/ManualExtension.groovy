@@ -33,14 +33,7 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      *          the {@link org.spockframework.runtime.model.SpecInfo} for the visited specification class.
      */
     public void visitSpecAnnotation(Manual annotation, SpecInfo spec) {
-        testPlanBuilders.each { it.appendSpec(annotation, spec) }
-        currentSpec = spec
-        spec.features.each { FeatureInfo feature ->
-            markFeature(feature)
-            if (!feature.getFeatureMethod().getReflection().getAnnotations().find { it.annotationType() == Manual }) {
-                testPlanBuilders.each { it.appendFeature(null, feature) }
-            }
-        }
+        testPlanBuilders.each { it.appendSpec(spec, annotation.story(), annotation.knownBugs()) }
     }
 
     /**
@@ -53,18 +46,17 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      */
     public void visitFeatureAnnotation(Manual annotation, FeatureInfo feature) {
         markFeature(feature)
-        if (currentSpec != feature.getParent()) {
-            Manual specAnnotation = feature.getParent().getReflection().getAnnotations().find {
-                it.annotationType() == Manual
-            }
-            testPlanBuilders.each { it.appendSpec(specAnnotation, feature.getParent()) }
-            currentSpec = feature.getParent()
+        Manual specAnnotation = feature.parent.getAnnotation(Manual)
+        if (currentSpec != feature.parent) {
+            testPlanBuilders.each { it.appendSpec(feature.parent, specAnnotation?.story(), specAnnotation?.knownBugs()) }
+            currentSpec = feature.parent
         }
-        testPlanBuilders.each { it.appendFeature(annotation, feature) }
+        testPlanBuilders.each { it.appendFeature(feature, annotation.story() ?: specAnnotation?.story() ?: "",
+                (annotation.knownBugs() + (specAnnotation?.knownBugs() ?: [])) as String[]) }
     }
 
     private markFeature(FeatureInfo feature) {
-        if (config.markManualTestsAsExcluded) feature.excluded = true
+        if (config.get("markManualTestsAsExcluded")) feature.excluded = true
         else feature.skipped = true
     }
 }
