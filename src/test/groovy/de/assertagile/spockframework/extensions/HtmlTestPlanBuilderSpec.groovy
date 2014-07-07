@@ -50,7 +50,7 @@ class HtmlTestPlanBuilderSpec extends TestPlanBuilderSpec {
 
         then:
         String result = stringWriter.toString()
-        result.contains("<span class='story'>SRY-4711</span>")
+        result.contains("<span class='story'>SRY-4711: </span>")
         result.contains("<span class='featureName'>I'm a feature's name.</span>")
         featureInfoMock.blocks*.texts*.each { result.contains(it) }
     }
