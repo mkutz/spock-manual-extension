@@ -34,6 +34,7 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      */
     public void visitSpecAnnotation(Manual annotation, SpecInfo spec) {
         testPlanBuilders.each { it.appendSpec(spec, annotation.story(), annotation.knownBugs()) }
+        currentSpec = spec
     }
 
     /**

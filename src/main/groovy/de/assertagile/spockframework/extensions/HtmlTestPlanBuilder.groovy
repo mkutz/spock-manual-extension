@@ -37,11 +37,10 @@ class HtmlTestPlanBuilder extends TestPlanBuilder {
         htmlWriter.h3 {
             if (story) {
                 if (jiraEnabled) {
-                    a(class: "story", href: issueJiraLink(story), story)
+                    a(class: "story", href: issueJiraLink(story), "${story}: ")
                 } else {
-                    span(class: "story", story)
+                    span(class: "story", "${story}: ")
                 }
-                ": "
             }
             span(class: "featureName", feature.name)
         }

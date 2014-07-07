@@ -72,6 +72,4 @@ class ManualExtensionSpec extends Specification {
         1 * testPlanBuilderMock.appendFeature(featureInfoMock, featureAnnotation.story(),
                 featureAnnotation.knownBugs() + specAnnotation.knownBugs())
     }
-
-    def ""
 }
