@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>de.assertagile.spockframework.extensions</groupId>
+    <artifactId>spock-manual-extension</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>Spock Manual Extension</name>
+    <description>An extension to mark certain tests as to be done manual for the Spock Framework
+        (see http://spockframework.org/).</description>
+    <url>https://github.com/mkutz/spock-manual-extension</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git://github.com/mkutz/spock-manual-extension.git</connection>
+        <developerConnection>scm:git:git@github.com:mkutz/spock-manual-extension.git</developerConnection>
+        <url>https://github.com/mkutz/spock-manual-extension</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>mkutz</id>
+            <name>Michael Kutz</name>
+            <email>mail@assertagile.de</email>
+            <timezone>+1</timezone>
+            <roles>
+                <role>developer</role>
+                <role>tester</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <java.version>1.7</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.3.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>0.7-groovy-2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.objenesis</groupId>
+            <artifactId>objenesis</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src/main/groovy</sourceDirectory>
+        <testSourceDirectory>src/test/groovy</testSourceDirectory>
+
+        <pluginManagement>
+            <plugins>
+
+                <!-- Configure the compiler plugin for Groovy -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.2</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <compilerId>groovy-eclipse-compiler</compilerId>
+                        <verbose>false</verbose>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>groovy-eclipse-compiler</artifactId>
+                            <version>2.9.0-01</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.groovy</groupId>
+                            <artifactId>groovy-eclipse-batch</artifactId>
+                            <version>2.3.4-01</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus snapshot repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype Nexus release repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release-sign-artifacts</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
