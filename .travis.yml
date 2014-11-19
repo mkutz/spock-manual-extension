@@ -1,4 +1,1 @@
 language: groovy
-
-after_success:
-- gradle jacocoTestReport coveralls
