@@ -2,14 +2,12 @@ package de.assertagile.spockframework.extensions.demonstration
 
 import de.assertagile.spockframework.extensions.Manual
 import spock.lang.Specification
-import spock.lang.Title
 
 
 /**
  * Created by mkutz on 02.07.14.
  */
-@Title("My manual spec is manual")
-@Manual(story = "STY-4711")
+@Manual(title = "My manual spec is manual", story = "STY-4711")
 class MyManualSpec extends Specification {
 
     @Manual(knownBugs = "BUG-42")

@@ -3,7 +3,6 @@ package de.assertagile.spockframework.extensions
 import org.spockframework.runtime.model.BlockKind
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
-import spock.lang.Title
 
 /**
  * Created by mkutz on 27.05.14.
