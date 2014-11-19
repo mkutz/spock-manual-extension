@@ -4,7 +4,6 @@ import org.spockframework.runtime.model.BlockInfo
 import org.spockframework.runtime.model.BlockKind
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
-import spock.lang.Specification
 import spock.lang.Subject
 
 /**

@@ -1,12 +1,9 @@
 package de.assertagile.spockframework.extensions
 
 import org.spockframework.runtime.model.FeatureInfo
-import org.spockframework.runtime.model.MethodInfo
-import org.spockframework.runtime.model.NodeInfo
 import org.spockframework.runtime.model.SpecInfo
 import spock.lang.Specification
 import spock.lang.Subject
-import spock.lang.Unroll
 
 import java.lang.reflect.AnnotatedElement
 
