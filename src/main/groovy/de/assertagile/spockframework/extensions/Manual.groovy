@@ -18,38 +18,14 @@ import java.lang.annotation.Target
  * appear in any way in the test statistics) and uses the feature's block texts to create a test plan file.
  * </p>
  *
- * For instance this feature
- *
- * <pre>
- * @Manual("Login and logout")
- * class LoginLogoutSystemSpec {
- *     def "Logout should work." {
- *         given: "a logged in user"
- *         when: "the user clicks the \"logout\" button"
- *         then: "the user is logged out."
- *     }
- * }
- * </pre>
- *
- * will result in the following markdown test plan entry
- *
- * <pre>
- * Login and logout
- * ================
- *
- * Login should work.
- * ------------------
- * Given a logged in user
- * When the user clicks the "logout" button
- * Then the user is logged out
- * </pre>
- *
  * @author Michael Kutz
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target([ElementType.TYPE, ElementType.METHOD])
 @ExtensionAnnotation(ManualExtension)
 public @interface Manual {
+
+    String title() default "";
 
     String story() default "";
 
