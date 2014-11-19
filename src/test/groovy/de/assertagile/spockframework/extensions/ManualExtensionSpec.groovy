@@ -22,7 +22,7 @@ class ManualExtensionSpec extends Specification {
     @Subject
     ManualExtension manualExtension = new ManualExtension(testPlanBuilders: [testPlanBuilderMock], config: configMock)
 
-    SpecInfo specInfoMock = Mock()
+    SpecInfo specInfoMock = Mock() { getReflection() >> Mock(AnnotatedElement) }
     Manual annotationMock = Mock() { story() >> ""; knownBugs() >> [] }
     FeatureInfo featureInfoMock = Mock() { getParent() >> specInfoMock }
 
@@ -63,7 +63,7 @@ class ManualExtensionSpec extends Specification {
             story() >> "FEAT-1"
             knownBugs() >> ["BUG-3"]
         }
-        specInfoMock.getAnnotation(Manual) >> specAnnotation
+        specInfoMock.getReflection().getAnnotation(Manual) >> specAnnotation
 
         when:
         manualExtension.visitFeatureAnnotation(featureAnnotation, featureInfoMock)

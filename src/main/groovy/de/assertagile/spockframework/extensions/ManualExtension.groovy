@@ -47,7 +47,7 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      */
     public void visitFeatureAnnotation(Manual annotation, FeatureInfo feature) {
         markFeature(feature)
-        Manual specAnnotation = feature.parent.getAnnotation(Manual)
+        Manual specAnnotation = feature.parent.reflection.getAnnotation(Manual)
         if (currentSpec != feature.parent) {
             testPlanBuilders.each { it.appendSpec(feature.parent, specAnnotation?.story(), specAnnotation?.knownBugs()) }
             currentSpec = feature.parent
