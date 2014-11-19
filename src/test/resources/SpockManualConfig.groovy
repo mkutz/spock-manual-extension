@@ -6,6 +6,6 @@ String jiraUrl = null
 String jiraPid = null
 
 testPlanBuilders = [
-    new HtmlTestPlanBuilder("build/test_plan.html", locale, jiraUrl, jiraPid),
-    new CsvTestPlanBuilder("build/test_plan.csv", locale)
+    new HtmlTestPlanBuilder("target/test_plan.html", locale, jiraUrl, jiraPid),
+    new CsvTestPlanBuilder("target/test_plan.csv", locale)
 ]
