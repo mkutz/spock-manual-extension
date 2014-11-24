@@ -5,7 +5,7 @@ import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
 
 /**
- * Created by mkutz on 28.05.14.
+ * A {@link TestPlanBuilder} to create CSV test plans.
  */
 class CsvTestPlanBuilder extends TestPlanBuilder {
 

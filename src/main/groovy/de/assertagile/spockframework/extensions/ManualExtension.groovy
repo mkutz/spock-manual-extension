@@ -5,13 +5,23 @@ import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
 
 /**
- * Created by mkutz on 22.05.14.
+ * <p>
+ * Extension for the <a href="http://spockframework.org">Spock Framework</a> to be able to write manual test plans in
+ * Spock beside of automated tests.
+ * </p>
+ * <p>
+ * Just mark a singe feature method or a whole specification with the annotation {@link Manual}.
+ * </p>
  */
 public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
 
+    /** {@link ConfigObject} for the extension. */
     private ConfigObject config
+
+    /** A {@link List} of {@link TestPlanBuilder}s to build the test plan. */
     private List<TestPlanBuilder> testPlanBuilders
 
+    /** The currently to be appended {@link SpecInfo}. */
     private SpecInfo currentSpec = null
 
     /**
@@ -56,7 +66,13 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
                 (annotation.knownBugs() + (specAnnotation?.knownBugs() ?: [])) as String[]) }
     }
 
-    private markFeature(FeatureInfo feature) {
+    /**
+     * Marks the {@link FeatureInfo} as excluded or skipped depending on the configuration parameter
+     * {@code markManualTestsAsExcluded}.
+     *
+     * @param feature the {@link FeatureInfo} it be marked.
+     */
+    private void markFeature(FeatureInfo feature) {
         if (config.get("markManualTestsAsExcluded")) feature.excluded = true
         else feature.skipped = true
     }

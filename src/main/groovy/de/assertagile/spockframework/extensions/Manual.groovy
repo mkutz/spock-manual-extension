@@ -17,17 +17,24 @@ import java.lang.annotation.Target
  * The extension will automatically exclude the marked features as excluded from the test run (meaning they do not
  * appear in any way in the test statistics) and uses the feature's block texts to create a test plan file.
  * </p>
- *
- * @author Michael Kutz
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target([ElementType.TYPE, ElementType.METHOD])
 @ExtensionAnnotation(ManualExtension)
 public @interface Manual {
 
+    /**
+     * @return a short title for the specification.
+     */
     String title() default "";
 
+    /**
+     * @return a reference to the original story of the specification or feature
+     */
     String story() default "";
 
+    /**
+     * @return the list of all known bugs of the specification or feature.
+     */
     String[] knownBugs() default [];
 }

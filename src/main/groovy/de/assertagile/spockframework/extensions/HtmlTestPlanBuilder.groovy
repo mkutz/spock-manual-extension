@@ -6,16 +6,25 @@ import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
 
 /**
- * Created by mkutz on 27.05.14.
+ * A {@link TestPlanBuilder} to create HTML test plans.
  */
 class HtmlTestPlanBuilder extends TestPlanBuilder {
 
+    /** Base URL to build JIRA links to known bugs and story tickets. */
     private final String jiraUrl
+    /** JIRA project ID needed to build JIRA links to create new bugs. */
     private final String jiraPid
+    /** Toggle to activate JIRA links in test plans. */
     private final boolean jiraEnabled
 
     private MarkupBuilder _htmlWriter
 
+    /**
+     * @param filePath the location of the file to write the test plan to.
+     * @param locale the {@link Locale} to use for the test plan.
+     * @param jiraUrl base URL to build JIRA links to known bugs and story tickets.
+     * @param jiraPid JIRA project ID needed to build JIRA links to create new bugs.
+     */
     public HtmlTestPlanBuilder(String filePath, Locale locale = Locale.ENGLISH, String jiraUrl = null, String jiraPid = null) {
         super(filePath, locale)
 
