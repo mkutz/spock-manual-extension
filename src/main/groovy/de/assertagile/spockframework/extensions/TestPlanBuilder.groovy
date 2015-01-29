@@ -32,7 +32,7 @@ abstract class TestPlanBuilder {
      * @param filePath the location of the file to write the test plan to.
      * @param locale the {@link Locale} to use for the test plan.
      */
-    public TestPlanBuilder(String filePath, Locale locale) {
+    public TestPlanBuilder(String filePath, Locale locale = Locale.ENGLISH) {
         this.file = new File(filePath).absoluteFile
         this.locale = locale
     }

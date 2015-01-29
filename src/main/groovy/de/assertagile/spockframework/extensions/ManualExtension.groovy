@@ -28,9 +28,24 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      * Standard constructor.
      */
     public ManualExtension() {
-        this.config = new ConfigSlurper().parse(GroovyResourceLoader.getResource("/SpockManualConfig.groovy"))
-        this.testPlanBuilders = config.get("testPlanBuilders", []) as List<TestPlanBuilder>
-        this.testPlanBuilders.each { it.appendHeader() }
+        getConfig()
+        getTestPlanBuilders()
+    }
+
+    private ConfigObject getConfig() {
+        if (!config) {
+            URL configUrl = getClass().getClassLoader().getResource("/SpockManualConfig.groovy")
+            config = configUrl ? new ConfigSlurper().parse(configUrl) : new ConfigObject()
+        }
+        return config
+    }
+
+    private List<TestPlanBuilder> getTestPlanBuilders() {
+        if (testPlanBuilders == null) {
+            testPlanBuilders = getConfig().get("testPlanBuilders", []) as List<TestPlanBuilder>
+            testPlanBuilders.each { it.appendHeader() }
+        }
+        return testPlanBuilders
     }
 
     /**

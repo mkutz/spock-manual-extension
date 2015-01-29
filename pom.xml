@@ -22,8 +22,8 @@
         <connection>scm:git:git://github.com/mkutz/spock-manual-extension.git</connection>
         <developerConnection>scm:git:git@github.com:mkutz/spock-manual-extension.git</developerConnection>
         <url>https://github.com/mkutz/spock-manual-extension</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <developers>
         <developer>
