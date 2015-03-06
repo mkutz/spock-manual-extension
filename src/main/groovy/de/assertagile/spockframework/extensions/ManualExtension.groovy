@@ -9,8 +9,9 @@ import org.spockframework.runtime.model.SpecInfo
  * Extension for the <a href="http://spockframework.org">Spock Framework</a> to be able to write manual test plans in
  * Spock beside of automated tests.
  * </p>
+ *
  * <p>
- * Just mark a singe feature method or a whole specification with the annotation {@link Manual}.
+ * Just mark a singe feature method or a whole {@link Specification} with the annotation {@link Manual}.
  * </p>
  */
 public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
@@ -28,13 +29,11 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      * Standard constructor.
      */
     public ManualExtension() {
-        getConfig()
-        getTestPlanBuilders()
     }
 
     private ConfigObject getConfig() {
         if (!config) {
-            URL configUrl = getClass().getClassLoader().getResource("/SpockManualConfig.groovy")
+            URL configUrl = getClass().getClassLoader().getResource("SpockManualConfig.groovy")
             config = configUrl ? new ConfigSlurper().parse(configUrl) : new ConfigObject()
         }
         return config
@@ -55,11 +54,18 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      * @param annotation
      *          the {@link Manual} annotation at the specification type. Might contain an alternative title as value.
      * @param spec
-     *          the {@link org.spockframework.runtime.model.SpecInfo} for the visited specification class.
+     *          the {@link SpecInfo} for the visited specification class.
      */
     public void visitSpecAnnotation(Manual annotation, SpecInfo spec) {
-        testPlanBuilders.each { it.appendSpec(spec, annotation.story(), annotation.knownBugs()) }
         currentSpec = spec
+
+        getTestPlanBuilders().each { it.appendSpec(spec) }
+        spec.features.each { FeatureInfo feature ->
+            markFeature(feature)
+            getTestPlanBuilders().each { TestPlanBuilder testPlanBuilder ->
+                testPlanBuilder.appendFeature(feature)
+            }
+        }
     }
 
     /**
@@ -67,18 +73,18 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      *
      * @param annotation
      *          the {@link Manual} annotation at the specification type. Might contain an alternative title as value.
-     * @param spec
-     *          the {@link org.spockframework.runtime.model.SpecInfo} for the visited specification class.
+     * @param feature
+     *          the {@link FeatureInfo} for the visited feature method.
      */
     public void visitFeatureAnnotation(Manual annotation, FeatureInfo feature) {
         markFeature(feature)
-        Manual specAnnotation = feature.parent.reflection.getAnnotation(Manual)
-        if (currentSpec != feature.parent) {
-            testPlanBuilders.each { it.appendSpec(feature.parent, specAnnotation?.story(), specAnnotation?.knownBugs()) }
-            currentSpec = feature.parent
+
+        if (currentSpec != feature.spec) {
+            getTestPlanBuilders().each { it.appendSpec(feature.spec) }
+            getTestPlanBuilders().each { TestPlanBuilder testPlanBuilder ->
+                testPlanBuilder.appendFeature(feature)
+            }
         }
-        testPlanBuilders.each { it.appendFeature(feature, annotation.story() ?: specAnnotation?.story() ?: "",
-                (annotation.knownBugs() + (specAnnotation?.knownBugs() ?: [])) as String[]) }
     }
 
     /**
@@ -88,7 +94,7 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      * @param feature the {@link FeatureInfo} it be marked.
      */
     private void markFeature(FeatureInfo feature) {
-        if (config.get("markManualTestsAsExcluded")) feature.excluded = true
+        if (getConfig().get("markManualTestsAsExcluded")) feature.excluded = true
         else feature.skipped = true
     }
 }

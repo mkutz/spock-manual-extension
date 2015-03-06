@@ -43,14 +43,14 @@ abstract class TestPlanBuilder {
     abstract public void appendHeader()
 
     /**
-     *
-     * @param spec
-     * @param story
-     * @param knownBugs
+     * @param spec the {@link SpecInfo} whose feature methods should be appended to the test plan.
      */
-    abstract public void appendSpec(SpecInfo spec, String story, String[] knownBugs)
+    abstract public void appendSpec(SpecInfo spec)
 
-    abstract public void appendFeature(FeatureInfo feature, String story, String[] knownBugs)
+    /**
+     * @param feature the {@link FeatureInfo} to be appended to the test plan.
+     */
+    abstract public void appendFeature(FeatureInfo feature)
 
     /**
      * @return the {@link Writer} to be used for output. Will initialize {@link #writer} if necessary.
@@ -68,12 +68,5 @@ abstract class TestPlanBuilder {
      */
     protected String blockKindToString(BlockKind blockKind) {
         BLOCK_NAME[blockKind][locale]
-    }
-
-    /**
-     * @param writer to be used for output.
-     */
-    protected void setWriter(Writer writer) {
-        this.writer = writer
     }
 }
