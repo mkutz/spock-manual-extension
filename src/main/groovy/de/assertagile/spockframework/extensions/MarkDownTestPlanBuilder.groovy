@@ -36,11 +36,15 @@ class MarkDownTestPlanBuilder extends TestPlanBuilder {
 
     @Override
     void appendFeature(FeatureInfo feature) {
-        writer << "\n###${feature.name}\n\n"
+        List<String> issues = feature.featureMethod.getAnnotation(Issue)?.value()
+
+        writer << "\n###${feature.name}\n"
+        if (issues) writer << "${issues.join(", ")}\n"
+        writer << "\n"
         feature.blocks.each { BlockInfo block ->
-            block.texts.each { String text ->
-                writer << "- *${blockKindToString(block.kind)}* ${text}\n"
-            }
+            writer << "- *${blockKindToString(block.kind)}* "
+            writer << block.texts.join("\n- *And* ")
+            writer << "\n"
         }
         writer << "\n"
         writer.flush()
