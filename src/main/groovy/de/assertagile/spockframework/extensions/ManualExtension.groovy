@@ -11,7 +11,7 @@ import org.spockframework.runtime.model.SpecInfo
  * </p>
  *
  * <p>
- * Just mark a singe feature method or a whole {@link Specification} with the annotation {@link Manual}.
+ * Just mark a singe feature method or a whole {@link spock.lang.Specification} with the annotation {@link Manual}.
  * </p>
  */
 public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {

@@ -11,7 +11,7 @@ import spock.lang.Title
  */
 @Manual
 @Title("My manual spec is manual")
-@Issue("http://assertagile.de/issues/STY-4711")
+@Issue("STY-4711")
 class MyManualSpec extends Specification {
 
     @Issue("http://assertagile.de/issues/BUG-42")
@@ -22,7 +22,7 @@ class MyManualSpec extends Specification {
         and: "the login button is visible"
     }
 
-    @Issue(["http://assertagile.de/issues/STY-4712", "http://assertagile.de/issues/BUG-666", "http://assertagile.de/issues/BUG-23"])
+    @Issue(["http://assertagile.de/issues/STY-4712", "http://assertagile.de/issues/BUG-666", "http://issues.com/4711"])
     def "this is a manual tested feature description with additional information"() {
         given: "the user is not logged in"
         when: "the user enters unknown credentials"

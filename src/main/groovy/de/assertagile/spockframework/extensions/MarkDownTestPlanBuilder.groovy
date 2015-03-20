@@ -3,6 +3,7 @@ package de.assertagile.spockframework.extensions
 import org.spockframework.runtime.model.BlockInfo
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
+import org.spockframework.util.Pair
 import spock.lang.Issue
 import spock.lang.Title
 
@@ -12,8 +13,8 @@ import spock.lang.Title
  */
 class MarkDownTestPlanBuilder extends TestPlanBuilder {
 
-    MarkDownTestPlanBuilder(String filePath, Locale locale = Locale.ENGLISH) {
-        super(filePath, locale)
+    MarkDownTestPlanBuilder(String filePath, String issueTrackerBaseUrl = null, Locale locale = Locale.ENGLISH) {
+        super(filePath, issueTrackerBaseUrl, locale)
     }
 
     @Override
@@ -27,8 +28,9 @@ class MarkDownTestPlanBuilder extends TestPlanBuilder {
         writer << "\n##${spec.getAnnotation(Title)?.value() ?: spec.name}\n"
 
         List<String> issues = spec.getAnnotation(Issue)?.value()
+
         if (issues) {
-            writer << "${issues.join(", ")}\n"
+            writer << "${getIssueLinks(issues).join(", ")}\n"
         }
 
         writer.flush()
@@ -39,7 +41,7 @@ class MarkDownTestPlanBuilder extends TestPlanBuilder {
         List<String> issues = feature.featureMethod.getAnnotation(Issue)?.value()
 
         writer << "\n###${feature.name}\n"
-        if (issues) writer << "${issues.join(", ")}\n"
+        if (issues) writer << "${getIssueLinks(issues).join(", ")}\n"
         writer << "\n"
         feature.blocks.each { BlockInfo block ->
             writer << "- *${blockKindToString(block.kind)}* "
@@ -48,5 +50,12 @@ class MarkDownTestPlanBuilder extends TestPlanBuilder {
         }
         writer << "\n"
         writer.flush()
+    }
+
+    private List<String> getIssueLinks(List<String> issues) {
+        return issues.collect { String issue ->
+            Pair<String, String> issueNameAndUrl = getIssueNameAndUrl(issue)
+            "[${issueNameAndUrl.first()}](${issueNameAndUrl.second()})"
+        }
     }
 }
