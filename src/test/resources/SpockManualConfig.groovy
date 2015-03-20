@@ -1,11 +1,10 @@
-import de.assertagile.spockframework.extensions.CsvTestPlanBuilder
-import de.assertagile.spockframework.extensions.HtmlTestPlanBuilder
+import de.assertagile.spockframework.extensions.MarkDownTestPlanBuilder
 
 Locale locale = Locale.ENGLISH
-String jiraUrl = null
-String jiraPid = null
+String issueTrackerBaseUrl = "http://assertagile.de/issues"
+boolean markManualTestsAsExcluded = true
 
 testPlanBuilders = [
-    new HtmlTestPlanBuilder("target/test_plan.html", locale, jiraUrl, jiraPid),
-    new CsvTestPlanBuilder("target/test_plan.csv", locale)
+    new MarkDownTestPlanBuilder("target/test_plan.md", issueTrackerBaseUrl, locale),
 ]
+

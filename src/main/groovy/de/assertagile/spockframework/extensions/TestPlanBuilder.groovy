@@ -3,6 +3,7 @@ package de.assertagile.spockframework.extensions
 import org.spockframework.runtime.model.BlockKind
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
+import org.spockframework.util.Pair
 
 /**
  * Abstract super class for all test plan builders.
@@ -28,13 +29,21 @@ abstract class TestPlanBuilder {
     /** The {@link Locale} for the test plan. */
     protected Locale locale
 
+    /** The base URL for the issue tracker (used to generate links in test plans). */
+    protected String issueTrackerBaseUrl
+
     /**
      * @param filePath the location of the file to write the test plan to.
+     * @param issueTrackerBaseUrl the base URL of the issue tracker. This is used to generate an issue's URL or extract
+     * an issues name from its URL (see {@link #getIssueNameAndUrl(java.lang.String)}).
      * @param locale the {@link Locale} to use for the test plan.
      */
-    public TestPlanBuilder(String filePath, Locale locale = Locale.ENGLISH) {
+    public TestPlanBuilder(String filePath, String issueTrackerBaseUrl = null, Locale locale = Locale.ENGLISH) {
         this.file = new File(filePath).absoluteFile
         this.locale = locale
+        if (issueTrackerBaseUrl) {
+            this.issueTrackerBaseUrl = issueTrackerBaseUrl.endsWith("/") ? issueTrackerBaseUrl : "${issueTrackerBaseUrl}/"
+        }
     }
 
     /**
@@ -43,14 +52,14 @@ abstract class TestPlanBuilder {
     abstract public void appendHeader()
 
     /**
-     *
-     * @param spec
-     * @param story
-     * @param knownBugs
+     * @param spec the {@link SpecInfo} whose feature methods should be appended to the test plan.
      */
-    abstract public void appendSpec(SpecInfo spec, String story, String[] knownBugs)
+    abstract public void appendSpec(SpecInfo spec)
 
-    abstract public void appendFeature(FeatureInfo feature, String story, String[] knownBugs)
+    /**
+     * @param feature the {@link FeatureInfo} to be appended to the test plan.
+     */
+    abstract public void appendFeature(FeatureInfo feature)
 
     /**
      * @return the {@link Writer} to be used for output. Will initialize {@link #writer} if necessary.
@@ -71,9 +80,13 @@ abstract class TestPlanBuilder {
     }
 
     /**
-     * @param writer to be used for output.
+     * @param issue the issue {@link String} taken from {@link spock.lang.Issue#value()}.
+     * @return a {@link Pair} of {@link String}s. The {@link Pair#first()} represents the issue's name,
+     * {@link Pair#second()} the URL in the issue tracker.
      */
-    protected void setWriter(Writer writer) {
-        this.writer = writer
+    protected Pair<String, String> getIssueNameAndUrl(String issue) {
+        if (issue.startsWith(issueTrackerBaseUrl)) return Pair.of(issue - issueTrackerBaseUrl, issue)
+        if (!issue.startsWith("http")) return Pair.of(issue, issueTrackerBaseUrl + issue)
+        return Pair.of(issue, issue)
     }
 }

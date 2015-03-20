@@ -24,17 +24,7 @@ import java.lang.annotation.Target
 public @interface Manual {
 
     /**
-     * @return a short title for the specification.
+     * @return a reason for this is not automated.
      */
-    String title() default "";
-
-    /**
-     * @return a reference to the original story of the specification or feature
-     */
-    String story() default "";
-
-    /**
-     * @return the list of all known bugs of the specification or feature.
-     */
-    String[] knownBugs() default [];
+    String value() default "";
 }

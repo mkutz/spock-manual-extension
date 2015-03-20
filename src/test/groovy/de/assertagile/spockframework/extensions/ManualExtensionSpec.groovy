@@ -5,6 +5,7 @@ import org.spockframework.runtime.model.SpecInfo
 import spock.lang.Specification
 import spock.lang.Subject
 
+import java.beans.FeatureDescriptor
 import java.lang.reflect.AnnotatedElement
 
 /**
@@ -19,54 +20,102 @@ class ManualExtensionSpec extends Specification {
     @Subject
     ManualExtension manualExtension = new ManualExtension(testPlanBuilders: [testPlanBuilderMock], config: configMock)
 
-    SpecInfo specInfoMock = Mock() { getReflection() >> Mock(AnnotatedElement) }
-    Manual annotationMock = Mock() { story() >> ""; knownBugs() >> [] }
-    FeatureInfo featureInfoMock = Mock() { getParent() >> specInfoMock }
-
-    def "annotated specs should be added to the test plan"() {
-        when:
-        manualExtension.visitSpecAnnotation(annotationMock, specInfoMock)
-
-        then:
-        1 * testPlanBuilderMock.appendSpec(specInfoMock, annotationMock.story(), annotationMock.knownBugs())
-    }
-
-    def "annotated features should be added to the test plan and set to the configured state"(
-            boolean markManualTestsAsExcluded) {
+    def "all features of an annotated spec should be regarded manual and be added to the test plan"(boolean markManualTestsAsExcluded) {
         given:
-        configMock.get("markManualTestsAsExcluded") >> markManualTestsAsExcluded
-
-        when:
-        manualExtension.visitFeatureAnnotation(annotationMock, featureInfoMock)
-
-        then:
-        1 * testPlanBuilderMock.appendFeature(featureInfoMock, annotationMock.story(), annotationMock.knownBugs())
+        SpecInfo specInfoMock = Mock()
 
         and:
-        if (markManualTestsAsExcluded) 1 * featureInfoMock.setExcluded(true)
-        else featureInfoMock.setSkipped(true)
+        configMock.get("markManualTestsAsExcluded") >> markManualTestsAsExcluded
+        specInfoMock.features >> [Mock(FeatureInfo), Mock(FeatureInfo)]
+
+        when:
+        manualExtension.visitSpecAnnotation(Mock(Manual), specInfoMock)
+
+        then:
+        1 * testPlanBuilderMock.appendFeature(specInfoMock.features[0])
+        1 * testPlanBuilderMock.appendFeature(specInfoMock.features[1])
+
+        and:
+        (markManualTestsAsExcluded ? 0 : 1) * specInfoMock.features[0].setSkipped(true)
+        (markManualTestsAsExcluded ? 1 : 0) * specInfoMock.features[0].setExcluded(true)
+        (markManualTestsAsExcluded ? 0 : 1) * specInfoMock.features[1].setSkipped(true)
+        (markManualTestsAsExcluded ? 1 : 0) * specInfoMock.features[1].setExcluded(true)
 
         where:
         markManualTestsAsExcluded << [true, false]
     }
 
-    def "annotated features should use their spec's annotation data"() {
+    def "an annotated feature method should be regarded manual and be added to the test plan"(boolean markManualTestsAsExcluded) {
         given:
-        Manual specAnnotation = Mock() {
-            story() >> "SPEC-1"
-            knownBugs() >> ["BUG-1", "BUG-2"]
+        FeatureInfo featureInfoMock = Mock {
+            getSpec() >> Mock(SpecInfo)
         }
-        Manual featureAnnotation = Mock() {
-            story() >> "FEAT-1"
-            knownBugs() >> ["BUG-3"]
-        }
-        specInfoMock.getReflection().getAnnotation(Manual) >> specAnnotation
+
+        and:
+        configMock.get("markManualTestsAsExcluded") >> markManualTestsAsExcluded
 
         when:
-        manualExtension.visitFeatureAnnotation(featureAnnotation, featureInfoMock)
+        manualExtension.visitFeatureAnnotation(Mock(Manual), featureInfoMock)
 
         then:
-        1 * testPlanBuilderMock.appendFeature(featureInfoMock, featureAnnotation.story(),
-                featureAnnotation.knownBugs() + specAnnotation.knownBugs())
+        1 * testPlanBuilderMock.appendFeature(featureInfoMock)
+
+        and:
+        (markManualTestsAsExcluded ? 0 : 1) * featureInfoMock.setSkipped(true)
+        (markManualTestsAsExcluded ? 1 : 0) * featureInfoMock.setExcluded(true)
+
+        where:
+        markManualTestsAsExcluded << [true, false]
+    }
+
+    def "a feature should only be added to the test plan if it was not added before due to a spec annotation"() {
+        given:
+        SpecInfo specInfoMock = Mock()
+        FeatureInfo featureInfoMock = Mock {
+            getSpec() >> specInfoMock
+        }
+        specInfoMock.features >> [featureInfoMock]
+
+        when:
+        manualExtension.visitSpecAnnotation(Mock(Manual), specInfoMock)
+        manualExtension.visitFeatureAnnotation(Mock(Manual), featureInfoMock)
+
+        then:
+        1 * testPlanBuilderMock.appendFeature(featureInfoMock)
+    }
+
+    def "an annotated feature's spec should be added even if it was not annotated"() {
+        SpecInfo specInfoMock = Mock()
+        FeatureInfo featureInfoMock = Mock {
+            getSpec() >> specInfoMock
+        }
+
+        when:
+        manualExtension.visitFeatureAnnotation(Mock(Manual), featureInfoMock)
+
+        then:
+        1 * testPlanBuilderMock.appendSpec(specInfoMock)
+    }
+
+    def "test plan builders"(testPlanBuilders, markManualTestsAsExcluded) {
+        given:
+        manualExtension.testPlanBuilders >> testPlanBuilders
+
+        and:
+        configMock.get("markManualTestsAsExcluded") >> markManualTestsAsExcluded
+
+        and:
+        FeatureInfo featureInfoMock = Mock()
+
+        when:
+        manualExtension.visitFeatureAnnotation(Mock(Manual), featureInfoMock)
+
+        then:
+        (markManualTestsAsExcluded ? 0 : 1) * featureInfoMock.setSkipped(true)
+        (markManualTestsAsExcluded ? 1 : 0) * featureInfoMock.setExcluded(true)
+
+        where:
+        testPlanBuilders << [ [Mock(TestPlanBuilder), Mock(TestPlanBuilder)], [] ]
+        markManualTestsAsExcluded << [true, false]
     }
 }

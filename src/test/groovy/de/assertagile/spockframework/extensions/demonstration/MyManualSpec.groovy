@@ -1,16 +1,20 @@
 package de.assertagile.spockframework.extensions.demonstration
 
 import de.assertagile.spockframework.extensions.Manual
+import spock.lang.Issue
 import spock.lang.Specification
+import spock.lang.Title
 
 
 /**
  * Created by mkutz on 02.07.14.
  */
-@Manual(title = "My manual spec is manual", story = "STY-4711")
+@Manual
+@Title("My manual spec is manual")
+@Issue("STY-4711")
 class MyManualSpec extends Specification {
 
-    @Manual(knownBugs = "BUG-42")
+    @Issue("http://assertagile.de/issues/BUG-42")
     def "this is a manual tested feature description"() {
         given: "the user is logged in"
         when: "the user clicks the logout button"
@@ -18,7 +22,7 @@ class MyManualSpec extends Specification {
         and: "the login button is visible"
     }
 
-    @Manual(story = "STY-4712", knownBugs = ["BUG-666", "BUG-23"])
+    @Issue(["http://assertagile.de/issues/STY-4712", "http://assertagile.de/issues/BUG-666", "http://issues.com/4711"])
     def "this is a manual tested feature description with additional information"() {
         given: "the user is not logged in"
         when: "the user enters unknown credentials"
