@@ -8,8 +8,7 @@ import spock.lang.Issue
 import spock.lang.Title
 
 /**
- * @author rewe.mkutz
- * @version $Id$
+ * {@link TestPlanBuilder} for Markdown test plans.
  */
 class MarkDownTestPlanBuilder extends TestPlanBuilder {
 

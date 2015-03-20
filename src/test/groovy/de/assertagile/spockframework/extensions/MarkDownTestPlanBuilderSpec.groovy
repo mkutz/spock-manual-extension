@@ -10,13 +10,9 @@ import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Title
 
-/**
- * @author rewe.mkutz
- * @version $Id$
- */
 class MarkDownTestPlanBuilderSpec extends Specification {
 
-    File testPlanFile = File.createTempFile("testplan", "md")
+    static File testPlanFile = File.createTempFile("testplan", "md")
     static String issueTrackerBaseUrl = "http://assertagile/issues"
 
     @Subject
@@ -60,7 +56,7 @@ class MarkDownTestPlanBuilderSpec extends Specification {
     def "appendFeature should add a third level headline, the features issues and the feature description"(
             String featureName, List<String> issues, String content) {
         given:
-        FeatureInfo featureInfoMock = Mock(FeatureInfo) {
+        FeatureInfo featureInfoMock = Mock {
             getName() >> featureName
             getBlocks() >> [Mock(BlockInfo) { getKind() >> BlockKind.EXPECT; getTexts() >> ["First", "Second"] }]
             getFeatureMethod() >> Mock(MethodInfo) {
