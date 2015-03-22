@@ -2,6 +2,7 @@ Spock Manual Extension
 ======================
 
 [![Build Status](https://travis-ci.org/mkutz/spock-manual-extension.svg?branch=master)](https://travis-ci.org/mkutz/spock-manual-extension) [![Coverage Status](https://img.shields.io/coveralls/mkutz/spock-manual-extension.svg)](https://coveralls.io/r/mkutz/spock-manual-extension)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/de.assertagile.spockframework.extensions/spock-manual-extension/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.assertagile.spockframework.extensions/spock-manual-extension)
 
 Extension to define manual test case specification using the [Spock framwork](http://spockframework.org/).
 
