@@ -113,5 +113,5 @@ In order to generate a test plan, you need to configure at least one `TestPlanBu
 Extension
 ---------
 
-Currently there is only one `MarkDownTestPlanBuilder`, but you can always create more. Just extend `TestPlanBuilder`
+Currently there is only `MarkDownTestPlanBuilder` and `CsvTestPlanBuilder`, but you can always create more. Just extend `TestPlanBuilder`
 and add it to your `SpockManualConfig.groovy`
