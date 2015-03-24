@@ -6,7 +6,7 @@ Spock Manual Extension
 
 Extension to define manual test case specification using the [Spock framwork](http://spockframework.org/).
 
-When executing a Specification marked ``@Manual`` the test will be set "ignored" and the block comments will be written to a test plan file.
+When executing a Specification marked `@Manual` the test will be set "ignored" and the block comments will be written to a test plan file.
 
 Example
 -------
@@ -43,7 +43,7 @@ class MyManualSpec extends Specification {
 }
 ```
 
-and the following ``SpockManualConfig.groovy`` file:
+and the following `SpockManualConfig.groovy` file:
 
 ```groovy
 import de.assertagile.spockframework.extensions.MarkDownTestPlanBuilder
@@ -54,10 +54,13 @@ boolean markManualTestsAsExcluded = true
 
 testPlanBuilders = [
     new MarkDownTestPlanBuilder("target/test_plan.md", issueTrackerBaseUrl, locale),
+    new CsvTestPlanBuilder("target/test_plan.csv", issueTrackerBaseUrl, locale)
 ]
 ```
-When executing the Specification in your IDE or via ``mvn test`` you will find the following test plan at
-``target/test_plan.md``:
+
+When executing the Specification in your IDE or via `mvn test` you will find the following test plan at
+`target/test_plan.md`:
+
 ```markdown
 #Manual Test Plan
 
@@ -82,17 +85,33 @@ When executing the Specification in your IDE or via ``mvn test`` you will find t
 - *And* the login button is visible
 ```
 
+and one more at `target/test_plan.csv`
+
+```
+"specification";"feature";"steps";"issues"
+"My manual spec is manual";"this is a manual tested feature description";"Given the user is logged in
+When the user clicks the logout button
+Then the user is at the start page
+And the login button is visible";"STY-4711 (http://assertagile.de/issues/STY-4711)
+BUG-42 (http://assertagile.de/issues/BUG-42)"
+"My manual spec is manual";"this is a manual tested feature description with additional information";"Given the user is not logged in
+When the user enters unknown credentials
+Then the user stayed at the start page
+And the login button is visible";"STY-4711 (http://assertagile.de/issues/STY-4711)
+STY-4712 (http://assertagile.de/issues/STY-4712), BUG-666 (http://assertagile.de/issues/BUG-666), http://issues.com/4711 (http://issues.com/4711)"
+```
+
 
 Usage
 -----
 
 To use this extension you need to create a Groovy config script in you projects test resources path named
-``SpockManualConfig.groovy``.
-In default Maven projects the file should be located in ``src/test/resources``.
-In order to generate a test plan, you need to configure at least one ``TestPlanBuilder``.
+`SpockManualConfig.groovy`.
+In default Maven projects the file should be located in `src/test/resources`.
+In order to generate a test plan, you need to configure at least one `TestPlanBuilder`.
 
 Extension
 ---------
 
-Currently there is only one ``MarkDownTestPlanBuilder``, but you can always create more. Just extend ``TestPlanBuilder``
-and add it to your ``SpockManualConfig.groovy``
+Currently there is only one `MarkDownTestPlanBuilder`, but you can always create more. Just extend `TestPlanBuilder`
+and add it to your `SpockManualConfig.groovy`
