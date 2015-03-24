@@ -1,5 +1,6 @@
 package de.assertagile.spockframework.extensions
 
+import groovy.util.logging.Log
 import org.spockframework.runtime.model.BlockInfo
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
@@ -10,10 +11,12 @@ import spock.lang.Title
 /**
  * {@link TestPlanBuilder} for Markdown test plans.
  */
+@Log
 class MarkDownTestPlanBuilder extends TestPlanBuilder {
 
     MarkDownTestPlanBuilder(String filePath, String issueTrackerBaseUrl = null, Locale locale = Locale.ENGLISH) {
         super(filePath, issueTrackerBaseUrl, locale)
+        log.debug("initializing ${this.class.simpleName}")
     }
 
     @Override
