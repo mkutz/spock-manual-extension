@@ -1,5 +1,6 @@
 package de.assertagile.spockframework.extensions
 
+import groovy.util.logging.Log
 import org.spockframework.runtime.extension.AbstractAnnotationDrivenExtension
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
@@ -14,10 +15,11 @@ import org.spockframework.runtime.model.SpecInfo
  * Just mark a singe feature method or a whole {@link spock.lang.Specification} with the annotation {@link Manual}.
  * </p>
  */
+@Log
 public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
 
     /** {@link ConfigObject} for the extension. */
-    private ConfigObject config
+    private static ConfigObject config
 
     /** A {@link List} of {@link TestPlanBuilder}s to build the test plan. */
     private List<TestPlanBuilder> testPlanBuilders
@@ -29,10 +31,12 @@ public class ManualExtension extends AbstractAnnotationDrivenExtension<Manual> {
      * Standard constructor.
      */
     public ManualExtension() {
+        log.debug("initializing ${this.class.simpleName}")
     }
 
     private ConfigObject getConfig() {
         if (!config) {
+            log.debug("reading config")
             URL configUrl = getClass().getClassLoader().getResource("SpockManualConfig.groovy")
             config = configUrl ? new ConfigSlurper().parse(configUrl) : new ConfigObject()
         }
