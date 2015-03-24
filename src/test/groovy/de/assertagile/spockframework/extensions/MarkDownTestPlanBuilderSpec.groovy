@@ -10,10 +10,7 @@ import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Title
 
-class MarkDownTestPlanBuilderSpec extends Specification {
-
-    static File testPlanFile = File.createTempFile("testplan", "md")
-    static String issueTrackerBaseUrl = "http://assertagile/issues"
+class MarkDownTestPlanBuilderSpec extends TestPlanBuilderSpec {
 
     @Subject
     MarkDownTestPlanBuilder testPlanBuilder = new MarkDownTestPlanBuilder(

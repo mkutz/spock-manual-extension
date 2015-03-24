@@ -4,6 +4,8 @@ import org.spockframework.runtime.model.BlockKind
 import org.spockframework.runtime.model.FeatureInfo
 import org.spockframework.runtime.model.SpecInfo
 import org.spockframework.util.Pair
+import spock.lang.Issue
+import spock.lang.Title
 
 /**
  * Abstract super class for all test plan builders.
@@ -77,6 +79,31 @@ abstract class TestPlanBuilder {
      */
     protected String blockKindToString(BlockKind blockKind) {
         BLOCK_NAME[blockKind][locale]
+    }
+
+    /**
+     * @param spec the {@link SpecInfo} whose name should be returned.
+     * @return the given {@link SpecInfo}'s name. Uses the {@link Title#value()} if present or the
+     * {@link SpecInfo#getName()} if not.
+     */
+    protected static String getSpecName(SpecInfo spec) {
+        spec.getAnnotation(Title)?.value() ?: spec.name
+    }
+
+    /**
+     * @param spec the {@link SpecInfo} whose issues should be returned.
+     * @return the issue links of the given {@link SpecInfo} (see {@link Issue#value()}) if any.
+     */
+    protected static List<String> getIssues(SpecInfo spec) {
+        spec.getAnnotation(Issue)?.value()
+    }
+
+    /**
+     * @param spec the {@link FeatureInfo} whose issues should be returned.
+     * @return the issue links of the given {@link FeatureInfo} (see {@link Issue#value()}) if any.
+     */
+    protected static List<String> getIssues(FeatureInfo feature) {
+        feature.featureMethod.getAnnotation(Issue)?.value()
     }
 
     /**

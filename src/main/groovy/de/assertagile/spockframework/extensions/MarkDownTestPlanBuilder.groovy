@@ -24,9 +24,9 @@ class MarkDownTestPlanBuilder extends TestPlanBuilder {
 
     @Override
     void appendSpec(SpecInfo spec) {
-        writer << "\n##${spec.getAnnotation(Title)?.value() ?: spec.name}\n"
+        writer << "\n##${getSpecName(spec)}\n"
 
-        List<String> issues = spec.getAnnotation(Issue)?.value()
+        List<String> issues = getIssues(spec)
 
         if (issues) {
             writer << "${getIssueLinks(issues).join(", ")}\n"
@@ -37,7 +37,7 @@ class MarkDownTestPlanBuilder extends TestPlanBuilder {
 
     @Override
     void appendFeature(FeatureInfo feature) {
-        List<String> issues = feature.featureMethod.getAnnotation(Issue)?.value()
+        List<String> issues = getIssues(feature)
 
         writer << "\n###${feature.name}\n"
         if (issues) writer << "${getIssueLinks(issues).join(", ")}\n"
