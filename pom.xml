@@ -4,7 +4,7 @@
 
     <groupId>de.assertagile.spockframework.extensions</groupId>
     <artifactId>spock-manual-extension</artifactId>
-    <version>1.2</version>
+    <version>1.3-SNAPSHOT</version>
 
     <name>Spock Manual Extension</name>
     <description>An extension to mark certain tests as to be done manual for the Spock Framework
@@ -22,7 +22,7 @@
         <connection>scm:git:git://github.com/mkutz/spock-manual-extension.git</connection>
         <developerConnection>scm:git:git@github.com:mkutz/spock-manual-extension.git</developerConnection>
         <url>https://github.com/mkutz/spock-manual-extension</url>
-        <tag>spock-manual-extension-1.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <developers>
